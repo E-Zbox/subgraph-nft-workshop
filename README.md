@@ -1,7 +1,7 @@
 # SUBGRAPH NFT WORKSHOP
 
 <div id="header" align="center">
-    <a href="https://thegraph.com/studio/?show=Create" target="blank"><img src="./screenshots/what-are-subgraphs.png" />
+    <a href="https://thegraph.com/studio/?show=Create" target="_blank"><img src="./screenshots/what-are-subgraphs.png" />
     </a>
 </div>
 
