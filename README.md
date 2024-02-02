@@ -49,9 +49,9 @@ Imagine a digital certificate of ownership for anything unique online, like art,
 
 ## Software Requirements
 
-<input type="checkbox" disabled checked /> [Node.js](https://nodejs.org/en/download/)
+- [x] [Node.js](https://nodejs.org/en/download/)
 
-<input type="checkbox" disabled checked /> The Graph CLI installed
+- [x] The Graph CLI installed
 
 - For `npm`, install the CLI using this command:
 
