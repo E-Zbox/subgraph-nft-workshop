@@ -18,6 +18,9 @@ In this workshop, we would be building and deploying a subgraph for the **[Azuki
 - [Setting Up a Subgraph](#setting-up-a-subgraph)
 - [Initializing a Subgraph](#initializing-a-subgraph)
 - [Building & Deploying Subgraph](#building--deploying-subgraph)
+- [Important files generated during subgraph init and build](#important-files-generated-during-subgraph-init-and-build)
+  - [🏳️ subgraph.yaml](#🏳️-subgraphyaml)
+  - [🏳️ schema.graphql](#🏳️-schemagraphql)
 
 ## About Azuki & NFTs 🎭
 
