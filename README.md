@@ -65,7 +65,7 @@ npm install -g @graphprotocol/graph-cli
 yarn global add @graphprotocol/graph-cli
 ```
 
-<input type="checkbox" disabled checked /> A decent IDE. [VS Code](https://code.visualstudio.com/) is a great option!
+- [x] A decent IDE. [VS Code](https://code.visualstudio.com/) is a great option!
 
 ## Prerequisites
 
@@ -79,7 +79,7 @@ To follow along on this workshop you need the following:
 
 #### Azuki Contract Address
 
-<input type="checkbox" disabled checked /> `0xED5AF388653567Af2F388E6224dC7C4b3241C544`
+- [x] `0xED5AF388653567Af2F388E6224dC7C4b3241C544`
 
 ## Setting Up a Subgraph
 
