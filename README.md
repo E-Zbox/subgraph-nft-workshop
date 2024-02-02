@@ -270,6 +270,13 @@ type Transfer @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  user: User! @derivedFrom(field: "transfers")
+}
+
+type User @entity(immutable: true) {
+  id: ID!
+  address: Bytes!
+  transfers: [Transfer!]! @relation(name: "MADE_TRANSFER", inverse: true)
 }
 ```
 
