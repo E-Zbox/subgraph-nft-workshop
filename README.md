@@ -226,6 +226,8 @@ dataSources:
 
 ### 🏳️ schema.graphql
 
+Contains a description of the data that clients can request from our subgraph and how to query it via GraphQL.
+
 <details>
 
 <summary>Code: </summary>
