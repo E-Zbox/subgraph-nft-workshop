@@ -12,8 +12,12 @@ In this workshop, we would be building and deploying a subgraph for the **[Azuki
 ### Table of Contents
 
 - [Description](#description)
+- [About Azuki & NFTs 🎭](#about-azuki--nfts-🎭)
 - [Software Requirements](#software-requirements)
 - [Prerequisites](#prerequisites)
+- [Setting Up a Subgraph](#setting-up-a-subgraph)
+- [Initializing a Subgraph](#initializing-a-subgraph)
+- [Building & Deploying Subgraph](#building--deploying-subgraph)
 
 ## About Azuki & NFTs 🎭
 
@@ -131,7 +135,7 @@ Now, we would go through an interactive prompt in our CLI as below:
 
 #### Congraulations 🥳, you successfully initialized your NFT subgraph
 
-### Building & Deploying Subgraph
+## Building & Deploying Subgraph
 
 Before we build and deploy the subgraph to the Studio, we need to authenticate within the CLI: `graph auth --studio [DEPLOY_KEY]`.
 
@@ -166,3 +170,102 @@ Fill the **Which version label to use? (e.g. "v0.0.1")** prompt as `v0.0.1`
     <img src="./screenshots/deployed-subgraph-syncing.png" width="600" />
     <p>Congratulations!! You successfully deployed your subgraph 🥳🎉</p>
 </div>
+
+## Important files generated during subgraph init and build
+
+### 🏳️ subgraph.yaml
+
+This is a YAML file containing the main configuration and definition for the subgraph
+
+<details>
+
+<summary>Code: </summary>
+
+```yaml
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Azuki
+    network: mainnet
+    source:
+      address: "0xED5AF388653567Af2F388E6224dC7C4b3241C544"
+      abi: Azuki
+      startBlock: 13975838
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - OwnershipTransferred
+        - Transfer
+      abis:
+        - name: Azuki
+          file: ./abis/Azuki.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/azuki.ts
+```
+
+</details>
+
+### 🏳️ schema.graphql
+
+<details>
+
+<summary>Code: </summary>
+
+```graphql
+type Approval @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  approved: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ApprovalForAll @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  operator: Bytes! # address
+  approved: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+```
+
+</details>
