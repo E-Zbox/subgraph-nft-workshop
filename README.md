@@ -17,7 +17,7 @@ In this workshop, we would be building and deploying a subgraph for the **[Azuki
 
 ## About Azuki & NFTs 🎭
 
-<div id="header" align="center">
+<div id="header" align="left">
     <img src="./screenshots/about-azuki.png" width="400" />
 </div>
 
@@ -89,13 +89,13 @@ To follow along on this workshop you need the following:
 
 - Once authenticated, click on **Create a Subgraph**.
 
-<div align="center">
+<div align="left">
     <img src="./screenshots/clik-create-subgraph.png" width="500" />
 </div>
 
 - Give the subgraph a name and click **Continue**. In our case, we named ours `azuki-nft-v0`
 
-<div align="center">
+<div align="left">
     <img src="./screenshots/create-subgraph.png" width="500" />
 </div>
 
@@ -156,12 +156,12 @@ graph deploy --studio azuki-nft-v0
 
 Fill the **Which version label to use? (e.g. "v0.0.1")** prompt as `v0.0.1`
 
-<div align="center">
+<div align="left">
     <img src="./screenshots/deployed-subgraph-success.png" width="600" />
+    <h4>Navigate to your dashboard to see that Subgraph is deployed and syncing</h4>
 </div>
 
-**Navigate to your dashboard to see that Subgraph is deployed and syncing**
-
+<hr/>
 <div align="center">
     <img src="./screenshots/deployed-subgraph-syncing.png" width="600" />
     <p>Congratulations!! You successfully deployed your subgraph 🥳🎉</p>
