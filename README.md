@@ -158,7 +158,6 @@ Fill the **Which version label to use? (e.g. "v0.0.1")** prompt as `v0.0.1`
 
 <div align="center">
     <img src="./screenshots/deployed-subgraph-success.png" width="600" />
-    <p>Congratulations!! You successfully deployed your subgraph 🥳🎉</p>
 </div>
 
 **Navigate to your dashboard to see that Subgraph is deployed and syncing**
