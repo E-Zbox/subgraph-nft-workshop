@@ -1,8 +1,5 @@
 import {
   Transfer as TransferEvent,
-  Approval as ApprovalEvent,
-  ApprovalForAll as ApprovalForAllEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
   Azuki as AzukiContract,
 } from "../generated/Azuki/Azuki"; // Import the relevant contract and event types
 import { User, NFT, Transfer } from "../generated/schema";
