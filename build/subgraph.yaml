@@ -1,11 +1,9 @@
 specVersion: 1.0.0
-indexerHints:
-  prune: auto
 schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum
-    name: Azuki
+    name: Azukis
     network: mainnet
     source:
       address: "0xED5AF388653567Af2F388E6224dC7C4b3241C544"
@@ -16,13 +14,12 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - OwnershipTransferred
+        - User
+        - NFT
         - Transfer
       abis:
         - name: Azuki
-          file: Azuki/abis/Azuki.json
+          file: Azukis/abis/Azuki.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
@@ -32,4 +29,4 @@ dataSources:
           handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: Azuki/Azuki.wasm
+      file: Azukis/Azukis.wasm
