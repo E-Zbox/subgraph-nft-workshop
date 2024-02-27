@@ -90,7 +90,7 @@ To follow along on this workshop you need the following:
 
 ## Setting Up a Subgraph
 
-- Navigate to [the Graph Studio](https://thegraph.com/studio).
+- Navigate to [The Graph Studio](https://thegraph.com/studio).
 
 - Click on **Connect Wallet** and authenticate a wallet address
 
@@ -108,7 +108,7 @@ To follow along on this workshop you need the following:
 
 ## Initializing a Subgraph
 
-So we have successfully setup our Subgraph in the Graph studio. Now, would initialize the subgraph using this command in your terminal:
+So we have successfully setup our Subgraph in The Graph studio. Now, would initialize the subgraph using this command in your terminal:
 
 `graph init --studio azuki-nft-v0`
 
