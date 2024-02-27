@@ -3,10 +3,23 @@ type User @entity {
   id: ID!
   # Ethereum address of the user, used as the primary key
   address: Bytes!
-  # List of NFTs owned by this user
-  nfts: [NFT!]! @derived(field: "owner")
+  # List of NFTs currently owned by this user
+  nfts: [NFT!]! @derivedFrom(field: "owner")
   # List of transfers initiated by this user
-  transfers: [Transfer!]! @derived(field: "from")
+  transfers: [Transfer!]! @derivedFrom(field: "from")
+}
+
+type Transfer @entity {
+  # Unique identifier for the transfer
+  id: ID!
+  # User initiating the transfer
+  from: User!
+  # User receiving the transfer
+  to: Bytes!
+  # Identifier of the transferred NFT
+  tokenId: BigInt
+  # Timestamp of the transfer
+  timestamp: BigInt
 }
 
 type NFT @entity {
@@ -16,25 +29,6 @@ type NFT @entity {
   tokenId: BigInt!
   # Owner of the NFT
   owner: User!
-  # Ethereum address of the NFT owner
-  ownerAddress: String!
   # URI associated with the NFT
   tokenURI: String
-}
-
-type Transfer @entity {
-  # Unique identifier for the transfer
-  id: ID!
-  # User initiating the transfer
-  from: User!
-  # Ethereum address of the sender
-  fromAddress: String!
-  # User receiving the transfer
-  to: User!
-  # Ethereum address of the receiver
-  toAddress: String!
-  # Identifier of the transferred NFT
-  tokenId: BigInt
-  # Timestamp of the transfer
-  timestamp: BigInt
 }
