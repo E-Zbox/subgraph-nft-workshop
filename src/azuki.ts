@@ -1,73 +1,39 @@
+// relevant contract and event types
+import { Transfer as TransferEvent } from "../generated/Azuki/Azuki";
+// generated entities
+// import { User, NFT, Transfer } from "../generated/schema";
+// helpers
 import {
-  Approval as ApprovalEvent,
-  ApprovalForAll as ApprovalForAllEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
-  Transfer as TransferEvent
-} from "../generated/Azuki/Azuki"
-import {
-  Approval,
-  ApprovalForAll,
-  OwnershipTransferred,
-  Transfer
-} from "../generated/schema"
+  createOrLoadNFT,
+  createOrLoadTransfer,
+  createOrLoadUser,
+} from "./helpers";
 
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
-  entity.tokenId = event.params.tokenId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  let entity = new ApprovalForAll(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.owner = event.params.owner
-  entity.operator = event.params.operator
-  entity.approved = event.params.approved
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
-
+// Event handler for Transfer events
 export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.tokenId = event.params.tokenId
+  // let's handle User entity
+  const user = createOrLoadUser(event.params.from.toHexString());
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  user.address = event.params.from;
 
-  entity.save()
+  user.save();
+
+  // let's handle Transfer entity
+  const transfer = createOrLoadTransfer(event.transaction.hash.toHexString());
+
+  transfer.from = user.id;
+  transfer.to = event.params.to;
+  transfer.tokenId = event.params.tokenId;
+  transfer.timestamp = event.block.timestamp;
+
+  transfer.save();
+
+  // let's handle NFT entity
+  const nft = createOrLoadNFT(event.params.tokenId.toString());
+
+  nft.owner = user.id;
+  nft.tokenId = event.params.tokenId;
+  nft.tokenURI = `/${event.params.tokenId.toString()}`;
+
+  nft.save();
 }

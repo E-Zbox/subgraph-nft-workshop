@@ -90,7 +90,7 @@ To follow along on this workshop you need the following:
 
 ## Setting Up a Subgraph
 
-- Navigate to [the Graph Studio](https://thegraph.com/studio).
+- Navigate to [The Graph Studio](https://thegraph.com/studio).
 
 - Click on **Connect Wallet** and authenticate a wallet address
 
@@ -108,7 +108,7 @@ To follow along on this workshop you need the following:
 
 ## Initializing a Subgraph
 
-So we have successfully setup our Subgraph in the Graph studio. Now, would initialize the subgraph using this command in your terminal:
+So we have successfully setup our Subgraph in The Graph studio. Now, would initialize the subgraph using this command in your terminal:
 
 `graph init --studio azuki-nft-v0`
 
@@ -180,6 +180,8 @@ Fill the **Which version label to use? (e.g. "v0.0.1")** prompt as `v0.0.1`
 
 This is a YAML file containing the main configuration and definition for the subgraph
 
+The `graph init --studio azuki-nft-v0` command prepopulates our **yaml** file with some configurations below:
+
 <details>
 
 <summary>Code: </summary>
@@ -224,9 +226,50 @@ dataSources:
 
 </details>
 
+**REFACTORED CODE** ✍️
+
+We would be changing the **yaml** file to fit our needs for the specific subgraph we've developed as follows:
+
+<details>
+
+<summary>Code</summary>
+
+```yaml
+specVersion: 1.0.0
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Azukis
+    network: mainnet
+    source:
+      address: "0xED5AF388653567Af2F388E6224dC7C4b3241C544"
+      abi: Azuki
+      startBlock: 13975838
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - NFT
+        - Transfer
+      abis:
+        - name: Azuki
+          file: ./abis/Azuki.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/azuki.ts
+```
+
+</details>
+
 ### 🏳️ schema.graphql
 
 Contains a description of the data that clients can request from our subgraph and how to query it via GraphQL.
+
+As for the `subgraph.yaml` file, the `graph init --studio azuki-nft-v0` command prepopulates our **graphql** file with the entities below as per events stated within the smart contract:
 
 <details>
 
@@ -272,12 +315,128 @@ type Transfer @entity(immutable: true) {
   transactionHash: Bytes!
   user: User! @derivedFrom(field: "transfers")
 }
+```
 
-type User @entity(immutable: true) {
+</details>
+
+**REFACTORED CODE** ✍️
+
+We would refactor our **graphql** file to serve our subgraph needs as follows:
+
+<details>
+
+<summary>Code</summary>
+
+```graphql
+type User @entity {
+  # Unique identifier for the user
   id: ID!
+  # Ethereum address of the user, used as the primary key
   address: Bytes!
-  transfers: [Transfer!]! @relation(name: "MADE_TRANSFER", inverse: true)
+  # List of NFTs currently owned by this user
+  nfts: [NFT!]! @derivedFrom(field: "owner")
+  # List of transfers initiated by this user
+  transfers: [Transfer!]! @derivedFrom(field: "from")
+}
+
+type Transfer @entity {
+  # Unique identifier for the transfer
+  id: ID!
+  # User initiating the transfer
+  from: User!
+  # User receiving the transfer
+  to: User!
+  # Identifier of the transferred NFT
+  tokenId: BigInt
+  # Timestamp of the transfer
+  timestamp: BigInt
+}
+
+type NFT @entity {
+  # Unique identifier for the NFT
+  id: ID!
+  # Unique identifier for the NFT
+  tokenId: BigInt!
+  # Owner of the NFT
+  owner: User!
+  # URI associated with the NFT
+  tokenURI: String
 }
 ```
 
 </details>
+
+### Generating `classes` & `types`
+
+On your terminal, run `graph codegen` command to generate entity types - files that define the types of data a particular subgraph exposes, ensuring type safety in your **GraphQL** operations.
+
+### 🏳️ src/azuki.ts
+
+This file holds the `mapping.eventHandlers` as specified in the `subgraph.yaml` file. We would be working with just a single **eventHandler** - `handleTransfer`.
+
+We refactor `handleTransfer` function to take the emitted `Transfer` event data and transform as per needs to entites listed in `subgraph.yaml` file.
+
+<details>
+
+<summary>Code</summary>
+
+```ts
+// relevant contract and event types
+import { Transfer as TransferEvent } from "../generated/Azuki/Azuki";
+// generated entities
+// import { User, NFT, Transfer } from "../generated/schema";
+// helpers
+import {
+  createOrLoadNFT,
+  createOrLoadTransfer,
+  createOrLoadUser,
+} from "./helpers";
+
+// Event handler for Transfer events
+export function handleTransfer(event: TransferEvent): void {
+  // let's handle User entity
+  const user = createOrLoadUser(event.params.from.toHexString());
+
+  user.address = event.params.from;
+
+  user.save();
+
+  // let's handle Transfer entity
+  const transfer = createOrLoadTransfer(event.transaction.hash.toHexString());
+
+  transfer.from = user.id;
+  transfer.to = event.params.to;
+  transfer.tokenId = event.params.tokenId;
+  transfer.timestamp = event.block.timestamp;
+
+  transfer.save();
+
+  // let's handle NFT entity
+  const nft = createOrLoadNFT(event.params.tokenId.toString());
+
+  nft.owner = user.id;
+  nft.tokenId = event.params.tokenId;
+  nft.tokenURI = `/${event.params.tokenId.toString()}`;
+
+  nft.save();
+}
+```
+
+</details>
+
+### Let's build 🏗️ and deploy 🚀🚀
+
+**BUILDING**
+
+To prepare our subgraph for deployment, paste the command `graph build` in your terminal. You'd notice a `build` directory got created with some files.
+
+What the `graph build` command does are:
+
+- validation checks to ensure our subgraph meets the required standards and is ready for deployment.
+- generation of **AssemblyScript WASM** files containing compiled bytecode that get executed when deployed to **_The Graph_** **nodes**
+
+**DEPLOYING**
+
+Paste the command `graph deploy --studio azuki-nft-v0` to deploy your subgraph.
+
+Once syncing is completed, test the query and watch the power of **The Graph** return the indexed, requested data 🎊💪
