@@ -440,3 +440,7 @@ What the `graph build` command does are:
 Paste the command `graph deploy --studio azuki-nft-v0` to deploy your subgraph.
 
 Once syncing is completed, test the query and watch the power of **The Graph** return the indexed, requested data 🎊💪
+
+### Live Version
+
+A live version of this subgraph can be found on the [Subgraph studio](https://thegraph.com/studio/subgraph/azuki-nft-v0/playground/). Switch to the latest version - **v0.0.7** (as of this writing) and query away 🚀🚀
