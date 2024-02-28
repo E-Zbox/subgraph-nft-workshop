@@ -395,17 +395,17 @@ import {
 // Event handler for Transfer events
 export function handleTransfer(event: TransferEvent): void {
   // let's handle User entity
-  const user = createOrLoadUser(event.params.from.toString());
+  const user = createOrLoadUser(event.params.from.toHexString());
 
   user.address = event.params.from;
 
   user.save();
 
   // let's handle Transfer entity
-  const transfer = createOrLoadTransfer(event.transaction.hash.toString());
+  const transfer = createOrLoadTransfer(event.transaction.hash.toHexString());
 
   transfer.from = user.id;
-  transfer.to = event.params.to.toString();
+  transfer.to = event.params.to;
   transfer.tokenId = event.params.tokenId;
   transfer.timestamp = event.block.timestamp;
 
